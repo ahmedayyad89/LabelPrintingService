@@ -1,0 +1,48 @@
+server:
+  port: 8000
+  servlet:
+    context-path: /api
+    
+logging.level.root: INFO
+logging.level.com.netflix.discovery.shared.resolver.aws.ConfigClusterResolver: WARN
+    
+
+info:
+  app:
+    name: Label Printing service
+    description: Label Printing service
+
+spring:
+  application:
+    name: label-printingp-service
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+
+swagger.enabled: true
+
+management:
+ server:
+  servlet:
+   context-path: /api
+ endpoints:
+  enabled-by-default: false
+  web:
+   exposure.include: info, health, caches, metrics, loggers
+ endpoint:
+  info:
+   enabled: true
+  health:
+   enabled: true
+  loggers:
+   enabled: true
+app:
+  folders:
+    path:
+      data: data/in
+      success: data/success
+      failure: data/failure
+  remote:
+    apis:
+      success: http://localhost:1234
+      failure: http://localhost:1234
