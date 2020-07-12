@@ -129,15 +129,7 @@
                                     </limits>
                                 </rule>
                             </rules>
-                            <excludes>
-                                <exclude>com/aptar/mes/runtime/*</exclude>
-                                <exclude>com/aptar/mes/runtime/api/**</exclude>
-                                <exclude>com/aptar/mes/runtime/config/**</exclude>
-                                <exclude>com/aptar/mes/runtime/mvc/**</exclude>
-                                <exclude>com/aptar/mes/runtime/dto/mapper/*Impl*</exclude>
-                                <exclude>com/aptar/mes/runtime/service/spec/**</exclude>
-                                <exclude>com/aptar/mes/runtime/dto/**</exclude>
-                            </excludes>
+
                         </configuration>
                     </execution>
                 </executions>

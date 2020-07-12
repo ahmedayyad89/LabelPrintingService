@@ -18,8 +18,6 @@ public class WatchResultsService {
 
     private static Boolean shutdown;
 
-    private WatchService successWatcher;
-    private WatchService failureWatcher;
 
     @Value("${app.folders.path.success}")
     private String successPath;
@@ -34,24 +32,26 @@ public class WatchResultsService {
     private String failureURI;
 
     @Scheduled(fixedRate = 500)
-    public void run() {
+    public void failureWatcher() {
+        watchDirectory(failurePath, failureURI);
+    }
 
-        Path successDir = Paths.get(successPath);
-        Path failureDir = Paths.get(failurePath);
-
+    private void watchDirectory(String path, String url) {
+        Path failureDir = Paths.get(path);
         try {
-            successWatcher = registerWatcher(successDir);
-            failureWatcher = registerWatcher(failureDir);
-            WatchKey successWatchKey = getWatchKey(successWatcher, successPath, successURI);
-            successWatchKey.reset();
-
-            WatchKey failureWatchKey = getWatchKey(failureWatcher, failurePath, failureURI);
+            WatchService watcher = registerWatcher(failureDir);
+            WatchKey failureWatchKey = getWatchKey(watcher, path, url);
             failureWatchKey.reset();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Scheduled(fixedRate = 500)
+    public void successWatcher() {
+        watchDirectory(successPath, successURI);
     }
 
     private WatchService registerWatcher(Path successDir) throws IOException {
