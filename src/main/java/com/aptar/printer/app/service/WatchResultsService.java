@@ -1,9 +1,8 @@
 package com.aptar.printer.app.service;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.stereotype.Component;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,8 +13,8 @@ import java.net.URL;
 import java.nio.file.*;
 import java.util.List;
 
-@Component
-public class WatchResultsService implements ApplicationRunner {
+@Service
+public class WatchResultsService {
 
     private static Boolean shutdown;
 
@@ -34,25 +33,20 @@ public class WatchResultsService implements ApplicationRunner {
     @Value("${app.remote.apis.failure}")
     private String failureURI;
 
-    @Override
-    public void run(ApplicationArguments args) {
+    @Scheduled(fixedRate = 500)
+    public void run() {
 
         Path successDir = Paths.get(successPath);
         Path failureDir = Paths.get(failurePath);
 
         try {
             successWatcher = registerWatcher(successDir);
-            failureWatcher = registerWatcher(successDir);
+            failureWatcher = registerWatcher(failureDir);
+            WatchKey successWatchKey = getWatchKey(successWatcher, successPath, successURI);
+            successWatchKey.reset();
 
-            while (true) {
-                WatchKey successWatchKey = getWatchKey(successWatcher, successPath, successURI);
-
-                successWatchKey.reset();
-
-                WatchKey failureWatchKey = getWatchKey(failureWatcher, failurePath, failureURI);
-
-                failureWatchKey.reset();
-            }
+            WatchKey failureWatchKey = getWatchKey(failureWatcher, failurePath, failureURI);
+            failureWatchKey.reset();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (IOException e) {

@@ -1,0 +1,15 @@
+swagger.enabled: false
+
+management:
+  endpoints:
+    enabled-by-default: false
+app:
+  folders:
+    path:
+      data: data/in
+      success: data/success
+      failure: data/failure
+  remote:
+    apis:
+      success: http://test:1234
+      failure: http://test:4567
